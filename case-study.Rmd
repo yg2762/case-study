@@ -26,7 +26,8 @@ questions wanna ask
 *Is length of stay related to neighborhaood group?
 
 ```{r}
-nyc_airbnb %>% 
+nyc_airbnb = 
+  nyc_airbnb %>% 
   mutate(stars = review_scores_location/2) %>% 
   rename(borough = neighbourhood_group)
 
@@ -34,13 +35,13 @@ nyc_airbnb %>%
 
 ```{r}
 nyc_airbnb %>% 
-  ggplot (aes(x=minimum_nights, y=price, color = neighbourhood_group)) +geom_point()
+  ggplot (aes(x=minimum_nights, y=price, color = borough)) +geom_point()
 ```
 
 ```{r}
 nyc_airbnb %>% 
-  ggplot (aes(y=price, x=availability_365, color = neighbourhood_group)) +geom_point() +
-  facet_grid(.~ neighbourhood_group)
+  ggplot (aes(y=price, x=availability_365, color = borough)) +geom_point() +
+  facet_grid(.~ borough)
 ```
 
 
@@ -73,7 +74,7 @@ nyc_airbnb %>%
   arrange(mean_price)
 
 nyc_airbnb %>% 
-  filter (neighbourhood_group == "Manhattan", price <= 1000 )%>% 
+  filter (borough == "Manhattan", price <= 1000 )%>% 
   mutate (neighbourhood = fct_reorder(neighbourhood, price)) %>% 
   ggplot (aes (x= neighbourhood, y=price)) +geom_boxplot() +coord_flip() +facet_grid(.~ room_type)
 ```
@@ -87,7 +88,9 @@ nyc_airbnb %>%
 
 
 ## mapping
-```{r}
+```{r, eval=FALSE}
+#github document cannot knit maps (eval=False)
+#html document can knit map 
 pal= colorNumeric ("Viridis", NULL)
 nyc_airbnb %>% 
   sample_n(1000) %>% 
@@ -95,6 +98,7 @@ nyc_airbnb %>%
   addTiles() %>% 
 addCircleMarkers(~lat, ~long, radius = 1, color=~pal(price))
 ```
+
 
 
 
